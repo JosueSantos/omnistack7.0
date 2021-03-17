@@ -1,24 +1,22 @@
-//importa express
 const express = require('express');
-//importa multer para lidar com upload
+//biblioteca para lidar com multipart form, enviar e ler os dados, fotos, etc.
 const multer = require('multer');
-//importa funcao para configurar o upload usando o multer
-const uploadConfig = require('./config/upload');
-//importa os controllers
-const PostController = require('./controllers/PostController');
-const LikeController = require('./controllers/LikeController');
 
-//cria router
+//importa configs do multer para upload da imagem
+const uploadConfig = require('./config/upload.js');
+//importa contoller do post
+const PostControler = require('./controllers/PostController.js');
+//importa controller dos likes
+const LikeController = require('./controllers/LikeController.js');
+
+//cria objeto para gerenciar as rotas
 const routes = new express.Router();
-//instancia e passa a configuracao do multer para lidar com uploads
+//instancia o multer para enviar a imagem
 const upload = multer(uploadConfig);
 
-//faz a rota do metodo GET para o controller
-routes.get('/posts', PostController.index);
-//faz a rota do metodo POST para o controller passando a imagem resolvida pelo multer como parametro
-routes.post('/posts', upload.single('image'), PostController.store);
-//faz a rota do metodo POST para o controller passando o id como parametro
+routes.get('/posts', PostControler.index);
+routes.post('/posts', upload.single('image'), PostControler.store);
+
 routes.post('/posts/:id/like', LikeController.store);
 
-//exporta rotas
 module.exports = routes;

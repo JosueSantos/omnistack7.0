@@ -1,21 +1,18 @@
-//importa mongoDB
 const mongoose = require('mongoose');
 
-//mapeia tabela no mongoDB
+//Cria schema da tabela do banco no mongoose
 const PostSchema = new mongoose.Schema({
     author: String,
     place: String,
     description: String,
-    hashtags: String,
+    hasgtag: String,
     image: String,
     likes: {
         type: Number,
-        default: 0,
-    },
-}, {
-    //cria um registro de data de *created at* e *updated at* na base de dados
-    timestamps: true,
+        default: 0
+    }
+},{
+    timestamps: true //cria campos createdAt e updatedAt
 });
 
-//exporta model
 module.exports = mongoose.model('Post', PostSchema);

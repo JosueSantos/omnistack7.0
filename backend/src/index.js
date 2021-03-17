@@ -1,43 +1,42 @@
-//importa express
-const express = require('express');
-//importa mongoDB
+//importa express para criar e manipular o servidor
+const express = require ('express');
+//importa mongoose para conectar com o banco de dados nao relacional mongoDB
 const mongoose = require('mongoose');
-//importa path (padrao do node) que resolve os caminhos
+
 const path = require('path');
-//importa cors que permite acessar o backend de dominios diferentes
 const cors = require('cors');
 
 //cria servidor
 const app = express();
 
-//importa o http padrao do node e atribui o app como parametro
+//configura o servidor para receber conexoes http e websocket
 const server = require('http').Server(app);
-//importa o socket.io e atribui o server como parametro
-//isso permite o server utilizar tanto http como web socket
-const io = require('socket.io')(server);
-
-//conecta com o mongoDB via mongoDB atlas
-mongoose.connect('mongodb+srv://omnistack:omnistack@cluster0-4v2yq.mongodb.net/test?retryWrites=true&w=majority', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        credentials: true
+    }
 });
 
-//cria um middleware e atribui a variavel io na requisicao para disponibiliza-la nos controllers
+
+//conecta com o banco - usuario: hyan / senha: eQbKOftPSNdy5U03
+mongoose.connect('mongodb+srv://hyan:eQbKOftPSNdy5U03@cluster0.70ti5.mongodb.net/test?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+//atribui o io na requisicao
 app.use((req, res, next) => {
     req.io = io;
-    //next chama o proximo middleware
     next();
 });
 
-//permite qualquer aplicacao acessar a o backend
 app.use(cors());
 
-//permite acessar as imagens pelo navegador
-app.use('/files', express.static(path.resolve(__dirname, '..', 'uploads', 'resized')));
+app.use('/files', express.static(path.resolve(__dirname,'..','uploads', 'resized')));
 
-//usa arquivo de rotas
 app.use(require('./routes'));
 
-//escuta porta
+//escuta uma porta qualquer
 server.listen(3333);
 
