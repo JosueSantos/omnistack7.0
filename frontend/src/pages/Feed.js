@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Feed.css';
 import '../services/api';
 import io from 'socket.io-client';
+
 
 import more from "../assets/more.svg";
 import like from "../assets/like.svg";
@@ -40,7 +42,7 @@ class Feed extends Component {
     }
 
     handleLike = id => {
-        api.post('/posts/'+id+"/like")
+         api.post('/posts/'+id+"/like")
     }
 
     render(){
@@ -64,7 +66,14 @@ class Feed extends Component {
                                 <button type="button" onClick={() => this.handleLike(post._id)}>
                                     <img src={like} alt="" />
                                 </button>
-                                <img src={comment} alt="" />
+                                    <Link to={{
+                                        pathname: '/comments',
+                                        state: {
+                                            id: post._id
+                                        }
+                                    }}>
+                                        <img src={comment} alt="Comentários" />
+                                    </Link>
                                 <img src={send} alt="" />
                             </div>
                             <strong>{post.likes} curtidas</strong>

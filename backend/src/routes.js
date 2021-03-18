@@ -8,6 +8,9 @@ const uploadConfig = require('./config/upload.js');
 const PostControler = require('./controllers/PostController.js');
 //importa controller dos likes
 const LikeController = require('./controllers/LikeController.js');
+//importa controller dos comentarios
+const CommentController = require('./controllers/CommentController.js');
+
 
 //cria objeto para gerenciar as rotas
 const routes = new express.Router();
@@ -18,5 +21,8 @@ routes.get('/posts', PostControler.index);
 routes.post('/posts', upload.single('image'), PostControler.store);
 
 routes.post('/posts/:id/like', LikeController.store);
+
+routes.get('/posts/:id/comments', CommentController.index);
+routes.post('/posts/:id/comments', CommentController.store);
 
 module.exports = routes;

@@ -10,7 +10,8 @@ const PostSchema = new mongoose.Schema({
     likes: {
         type: Number,
         default: 0
-    }
+    },
+    comments: [String],
 },{
     timestamps: true //cria campos createdAt e updatedAt
 });

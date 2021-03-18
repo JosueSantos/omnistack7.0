@@ -2,6 +2,8 @@
 const express = require ('express');
 //importa mongoose para conectar com o banco de dados nao relacional mongoDB
 const mongoose = require('mongoose');
+//importa parser para form urlencoded
+const bodyParser = require('body-parser');
 
 const path = require('path');
 const cors = require('cors');
@@ -34,6 +36,8 @@ app.use((req, res, next) => {
 app.use(cors());
 
 app.use('/files', express.static(path.resolve(__dirname,'..','uploads', 'resized')));
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(require('./routes'));
 
