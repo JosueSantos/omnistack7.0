@@ -1,8 +1,8 @@
-const posts = require('./PostController');
+const comments = require('./CommentController');
 const httpMocks = require('node-mocks-http');
 const mongoose = require('mongoose');
 
-describe('Testes para posts', () => {
+describe('Testes para comentários', () => {
 
     beforeAll(async () => {
         //conecta com o banco - usuario: hyan / senha: eQbKOftPSNdy5U03
@@ -12,25 +12,30 @@ describe('Testes para posts', () => {
         });
     })
 
-    it('O feed deve exibir os posts em ordem de publicação', async () => {
+    it('Ler comentários de um post', async() => {
+
+        const post_id = "605fa0e3966b8a2422dcf01e"
+        const post_comentarios = ["Teste1", "Teste2", "Teste3"];
 
         const req = httpMocks.createRequest({
             method: 'GET',
-            url: '/posts'
+            url: '/posts/' + post_id + '/like'
         });
 
         const res = httpMocks.createResponse();
 
-        await posts.index(req,res);
+        //id do post a ser testado
+        req.params.id = post_id;
+
+        await comments.index(req, res);
 
         let resultado = JSON.parse(res._getData());
-        let resultadoOrdenado = JSON.parse(res._getData()); 
 
-        //faz a ordenação dos elementos
-        resultadoOrdenado.sort((a, b) => (a.createdAt < b.createdAt) ? 1 : ((b.createdAt < a.createdAt) ? -1: 0));
+        //console.log(resultado.comments);
+
+        expect(post_comentarios).toEqual(resultado.comments);
 
         mongoose.disconnect();
-
-        expect(resultado).toStrictEqual(resultadoOrdenado);
     })
+
 })

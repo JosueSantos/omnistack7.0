@@ -10,7 +10,7 @@ module.exports = {
         const post = await Post.findById(req.params.id);
 
         const { comment } = req.body;
-        console.log(comment)
+
         post.comments.push(comment);
 
         await post.save();
