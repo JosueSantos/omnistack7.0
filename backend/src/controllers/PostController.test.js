@@ -29,8 +29,49 @@ describe('Testes para posts', () => {
         //faz a ordenação dos elementos
         resultadoOrdenado.sort((a, b) => (a.createdAt < b.createdAt) ? 1 : ((b.createdAt < a.createdAt) ? -1: 0));
 
-        mongoose.disconnect();
-
         expect(resultado).toStrictEqual(resultadoOrdenado);
+
+    })
+
+    it("Cadastrar um novo post", async () => {
+
+        const req = httpMocks.createRequest({
+            method: 'POST',
+            url: '/new'
+        });
+
+        const res = httpMocks.createResponse();
+
+        //dados do post criado para teste
+        const testeVal = "Teste Jest " + Math.random();
+
+        req.body.author = testeVal;
+        req.body.place = testeVal;
+        req.body.description = testeVal;
+        req.body.hashtags = testeVal;
+
+        req.file = {
+            fieldname: 'image',
+            originalname: 'placeholder-circle.png',
+            encoding: '7bit',
+            mimetype: 'image/png',
+            destination:
+                '/home/hyan/Desktop/react-projetcs/omnistack7.0/backend/uploads',
+            filename: 'placeholder-circle.png',
+            path:
+                '/home/hyan/Desktop/react-projetcs/omnistack7.0/backend/uploads/placeholder-circle.png',
+            size: 23370
+        };
+        //req.file.filename = "placeholder-circle.jpg";
+        //req.file.path = "/home/hyan/Desktop/react-projetcs/omnistack7.0/backend/uploads/placeholder-circle.png";
+        //req.file.destination = "/home/hyan/Desktop/react-projetcs/omnistack7.0/backend/uploads";
+
+        await posts.store(req, res);
+
+        let resultado = JSON.parse(res._getData());
+
+        expect(resultado.author).toBe(testeVal);
+
+        mongoose.disconnect();
     })
 })
