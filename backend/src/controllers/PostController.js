@@ -17,6 +17,8 @@ module.exports = {
         const { author, place, description, hashtags } = req.body;
         const { filename: image} = req.file;
 
+        console.log(req.file);
+
         //separa o nome da imagem da extencao
         const [name] = image.split('.');
         const fileName = name + '.jpg';
@@ -27,13 +29,13 @@ module.exports = {
         );
 
         //deleta a imagem com tamanho original
-        fs.unlinkSync(req.file.path);
+        //fs.unlinkSync(req.file.path);
 
         const post = await Post.create({
             author, place, description, hashtags, image: fileName
         });
 
-        req.io.emit('post', post);
+        if(req.io)req.io.emit('post', post);
 
         res.json(post);
     }
